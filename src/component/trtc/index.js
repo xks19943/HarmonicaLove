@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import {
     View,
     NativeModules,
-    ViewProps, ViewPropTypes,
+    ViewPropTypes,
+    Platform,
+    findNodeHandle
 } from 'react-native';
 
+console.log(NativeModules, 'xxx');
+const NativeTRTC = Platform.OS === 'ios' ?NativeModules.TRTCManager : null;
 
-const NativeTRTC = NativeModules.RCTTRTC;
 
 class TRTC extends Component<Props>{
 
@@ -14,6 +17,11 @@ class TRTC extends Component<Props>{
     static propTypes = {
         style: ViewPropTypes.style
     };
+
+    resolveFirstLayout: (layout: Object) => void;
+    firstLayoutPromise = new Promise(resolve => {
+        this.resolveFirstLayout = resolve;
+    });
 
     /**
      * 主播或者观众加入聊天室
@@ -41,8 +49,15 @@ class TRTC extends Component<Props>{
      * @param frontCamera 相机是否前置
      * @param fitMode 视频显示模式为 Fill 或 Fit 模式  0位fit模式 1位fill模式
      */
-    startLocal(frontCamera: boolean, fitMode: number){
-        NativeTRTC.startLocal(frontCamera, fitMode, this.root)
+    startLocal(frontCamera, fitMode){
+
+      this.firstLayoutPromise
+        .then(() => {
+          const node = findNodeHandle(this.root);
+          NativeTRTC.startLocal(frontCamera, fitMode, node);
+        }).then((e)=>{
+            console.log(e, '---')
+        })
     }
 
 
@@ -67,7 +82,8 @@ class TRTC extends Component<Props>{
      * @param fitMode
      */
     startRemote(userId: string, fitMode: number){
-        NativeTRTC.startRemote(userId, fitMode, this.root)
+        const node = findNodeHandle(this.root);
+        NativeTRTC.startRemote(userId, fitMode, node)
     }
 
     /**
@@ -82,6 +98,15 @@ class TRTC extends Component<Props>{
     onRef = (ref) => {
         this.root = ref;
     };
+
+
+    componentDidMount(){
+        this.startLocal(true,0);
+    }
+
+    componentWillUnmount(){
+        this.stopLocal();
+    }
 
 
     render(){

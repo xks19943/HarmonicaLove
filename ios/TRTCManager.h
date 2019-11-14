@@ -11,8 +11,5 @@
 
 @interface TRTCManager : NSObject <RCTBridgeModule,TRTCCloudDelegate>
 
-
-+(TRTCManager *)sharedInstance;
-
 @end
 

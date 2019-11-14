@@ -11,14 +11,20 @@ import {
     StyleSheet,
     View
 } from 'react-native';
+import TRTC from './src/component/trtc';
 
 class App extends React.Component{
   render(){
     return(
-        <View>
-
-        </View>
+        <TRTC style={styles.container}/>
     )
   }
 }
 export default App;
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});

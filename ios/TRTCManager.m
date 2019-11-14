@@ -23,24 +23,31 @@ static TRTCManager *_sharedInstance;
 static TRTCCloud *trtcCloud;
 
 
-+(TRTCManager *)sharedInstance{
-  if(_sharedInstance != nil){
-    _sharedInstance = [[TRTCManager alloc] init];
-  }
-  if(trtcCloud != nil){
-    trtcCloud = [TRTCCloud sharedInstance];
-    [trtcCloud setDelegate: _sharedInstance];
-  }
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+  
+  
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    if(_sharedInstance == nil){
+      NSLog(@"调用了这个方法111");
+      _sharedInstance = [super allocWithZone:zone];
+    }
+    
+    if(trtcCloud == nil){
+      NSLog(@"调用了这个方法22");
+      trtcCloud = [TRTCCloud sharedInstance];
+      [trtcCloud setDelegate: _sharedInstance];
+    }
+    
+  });
+  
   return _sharedInstance;
+  
 }
 
 
 
-RCT_EXPORT_MODULE(@"RCTTRTC")
-
-@synthesize bridge = _bridge;
-
-
+RCT_EXPORT_MODULE()
 
 
 /// 主播开启或者观众加入房间
