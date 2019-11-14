@@ -9,10 +9,7 @@
 #import <React/RCTBridgeModule.h>
 #import <TXLiteAVSDK_TRTC/TRTCCloudDelegate.h>
 
-
-
-
-@interface TRTCManager : NSObject <RCTBridgeModule, TRTCCloudDelegate>
+@interface TRTCManager : NSObject <RCTBridgeModule,TRTCCloudDelegate>
 
 
 +(TRTCManager *)sharedInstance;

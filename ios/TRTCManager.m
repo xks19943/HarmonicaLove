@@ -14,6 +14,9 @@
 #endif
 #import <React/RCTBridge.h>
 
+
+
+
 @implementation TRTCManager
 
 static TRTCManager *_sharedInstance;
@@ -26,10 +29,10 @@ static TRTCCloud *trtcCloud;
   }
   if(trtcCloud != nil){
     trtcCloud = [TRTCCloud sharedInstance];
+    [trtcCloud setDelegate: _sharedInstance];
   }
   return _sharedInstance;
 }
-
 
 
 
@@ -109,7 +112,7 @@ RCT_EXPORT_METHOD(muteLocal){
 
 
 /// 开启预览摄像头画面和麦克风采集
-/// @param frontCamera  相机是否前置
+/// @param userId 
 /// @param fitMode  视频显示模式为 Fill 或 Fit 模式  0位fit模式 1位fill模式
 /// @param reactTag
 RCT_EXPORT_METHOD(startRemote:(NSString *) userId
