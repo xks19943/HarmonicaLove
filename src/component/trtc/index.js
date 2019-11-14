@@ -50,7 +50,6 @@ class TRTC extends Component<Props>{
      * @param fitMode 视频显示模式为 Fill 或 Fit 模式  0位fit模式 1位fill模式
      */
     startLocal(frontCamera, fitMode){
-
       this.firstLayoutPromise
         .then(() => {
           const node = findNodeHandle(this.root);
@@ -82,8 +81,13 @@ class TRTC extends Component<Props>{
      * @param fitMode
      */
     startRemote(userId: string, fitMode: number){
-        const node = findNodeHandle(this.root);
-        NativeTRTC.startRemote(userId, fitMode, node)
+      this.firstLayoutPromise
+        .then(() => {
+          const node = findNodeHandle(this.root);
+          NativeTRTC.startRemote(userId, fitMode, node)
+        }).then((e)=>{
+        console.log(e, '---')
+      });
     }
 
     /**
@@ -92,7 +96,6 @@ class TRTC extends Component<Props>{
     stopRemote(userId: string){
         NativeTRTC.stopRemote(userId);
     }
-
 
 
     onRef = (ref) => {
