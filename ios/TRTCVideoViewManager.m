@@ -7,10 +7,15 @@
 //
 
 #import "TRTCVideoViewManager.h"
+#import "TRTCVideoView.h"
 
 @implementation TRTCVideoViewManager
 
-RCT_EXPORT_MODULE("RCTTRTCVideoView")
+RCT_EXPORT_MODULE(RNTTRTCVideoView)
 
+- (UIView *)view
+{
+  return [[TRTCVideoView alloc] init];
+}
 
 @end

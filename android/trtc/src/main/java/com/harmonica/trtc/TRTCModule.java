@@ -1,6 +1,7 @@
 package com.harmonica.trtc;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -22,7 +23,8 @@ class TRTCModule extends ReactContextBaseJavaModule implements LifecycleEventLis
 
     private TRTCCloud trtcCloud;
     private TRTCCloudDef.TRTCParams trtcParams;
-    private Promise mPromise;
+    private Promise mLocalPromise;
+    private Promise mRemotePromise;
 
     public TRTCModule(@NonNull ReactApplicationContext reactContext) {
         super(reactContext);
@@ -35,23 +37,48 @@ class TRTCModule extends ReactContextBaseJavaModule implements LifecycleEventLis
             public void onError(int i, String s, Bundle bundle) {
                 super.onError(i, s, bundle);
                 if (i == TXLiteAVCode.ERR_ROOM_ENTER_FAIL) {
-                    mPromise.reject("ERR_ROOM_ENTER_FAIL", "ERR_ROOM_ENTER_FAIL" + s);
+
+                    if(mLocalPromise!= null){
+                        mLocalPromise.reject("ERR_ROOM_ENTER_FAIL", "ERR_ROOM_ENTER_FAIL" + s);
+                        mLocalPromise = null;
+                    }
+                    if(mRemotePromise!= null){
+                        mRemotePromise.reject("ERR_ROOM_ENTER_FAIL", "ERR_ROOM_ENTER_FAIL" + s);
+                        mRemotePromise = null;
+                    }
                 }
+
             }
 
             @Override
             public void onEnterRoom(long l) {
-                mPromise.resolve(true);
+                if(mLocalPromise != null){
+                    mLocalPromise.resolve(true);
+                    mLocalPromise = null;
+                }
+                if(mRemotePromise != null){
+                    mRemotePromise.resolve(true);
+                    mRemotePromise = null;
+                }
             }
 
             @Override
             public void onUserVideoAvailable(String s, boolean b) {
-                mPromise.resolve(s);
+                Log.i("onUserVideoAvailable","调用了这个方法" + s);
+                if(mRemotePromise != null){
+                    mRemotePromise.resolve(s);
+                    mRemotePromise = null;
+                }
             }
 
             @Override
             public void onExitRoom(int i) {
-
+                if(mLocalPromise!= null){
+                    mLocalPromise = null;
+                }
+                if(mRemotePromise!= null){
+                    mRemotePromise = null;
+                }
             }
         });
     }
@@ -60,7 +87,7 @@ class TRTCModule extends ReactContextBaseJavaModule implements LifecycleEventLis
     @NonNull
     @Override
     public String getName() {
-        return "TRTC";
+        return "TRTCModule";
     }
 
     @Override
@@ -99,11 +126,12 @@ class TRTCModule extends ReactContextBaseJavaModule implements LifecycleEventLis
         trtcParams.roomId   = roomId; //输入您想进入的房间
         if(role == 0){
             trtcParams.role = TRTCCloudDef.TRTCRoleAnchor; //当前角色为主播
+            mLocalPromise = promise;
         } else {
             trtcParams.role = TRTCCloudDef.TRTCRoleAudience; //当前角色为用户
+            mRemotePromise = promise;
         }
         trtcCloud.enterRoom(trtcParams, TRTCCloudDef.TRTC_APP_SCENE_LIVE);
-        mPromise = promise;
     }
 
 
@@ -127,21 +155,24 @@ class TRTCModule extends ReactContextBaseJavaModule implements LifecycleEventLis
      */
     @ReactMethod
     public void startLocal(final boolean frontCamera, final int fitMode, final int viewTag, final Promise promise) {
+        Log.i("startLocal","调用了这个方法1");
         final ReactApplicationContext context = getReactApplicationContext();
         UIManagerModule uiManager = context.getNativeModule(UIManagerModule.class);
         uiManager.addUIBlock(new UIBlock() {
             @Override
             public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                final RCTTRTCVideoView rCTTRTCVideoView;
+                Log.i("startLocal","调用了这个方法2");
+                final RNTTRTCVideoView rnttrtcVideoView;
                 try {
-                    rCTTRTCVideoView = (RCTTRTCVideoView) nativeViewHierarchyManager.resolveView(viewTag);
+                    rnttrtcVideoView = (RNTTRTCVideoView) nativeViewHierarchyManager.resolveView(viewTag);
                     if(fitMode == 0){
                         trtcCloud.setLocalViewFillMode(TRTCCloudDef.TRTC_VIDEO_RENDER_MODE_FIT);
                     }else {
                         trtcCloud.setLocalViewFillMode(TRTCCloudDef.TRTC_VIDEO_RENDER_MODE_FILL);
                     }
-                    trtcCloud.startLocalPreview(frontCamera, rCTTRTCVideoView);
+                    trtcCloud.startLocalPreview(frontCamera, rnttrtcVideoView);
                     trtcCloud.startLocalAudio();
+                    Log.i("startLocal","调用了这个方法3");
                     promise.resolve(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -186,19 +217,19 @@ class TRTCModule extends ReactContextBaseJavaModule implements LifecycleEventLis
         uiManager.addUIBlock(new UIBlock() {
             @Override
             public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                final RCTTRTCVideoView rCTTRTCVideoView;
+                final RNTTRTCVideoView rnttrtcVideoView;
                 try {
-                    rCTTRTCVideoView = (RCTTRTCVideoView) nativeViewHierarchyManager.resolveView(viewTag);
+                    rnttrtcVideoView = (RNTTRTCVideoView) nativeViewHierarchyManager.resolveView(viewTag);
                     if(fitMode == 0){
                         trtcCloud.setRemoteViewFillMode(userId, TRTCCloudDef.TRTC_VIDEO_RENDER_MODE_FIT);
                     }else {
                         trtcCloud.setRemoteViewFillMode(userId, TRTCCloudDef.TRTC_VIDEO_RENDER_MODE_FILL);
                     }
-                    trtcCloud.startRemoteView(userId, rCTTRTCVideoView);
+                    trtcCloud.startRemoteView(userId, rnttrtcVideoView);
                     promise.resolve(true);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    promise.reject("startLocal", "startLocal fail");
+                    promise.reject("startRemote", "startRemote fail");
                 }
             }
         });

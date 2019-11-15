@@ -13,6 +13,7 @@
 #import <React/RCTUIManagerUtils.h>
 #endif
 #import <React/RCTBridge.h>
+#import "TRTCVideoView.h"
 
 
 
@@ -91,7 +92,7 @@ RCT_EXPORT_METHOD(startLocal:(BOOL) frontCamera
                   fitMode:(NSNumber *) fitMode
                   reactTag:(NSNumber *) reactTag){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-    UIView *view = viewRegistry[reactTag];
+    TRTCVideoView *view = viewRegistry[reactTag];
     if(fitMode == 0){
       [trtcCloud setLocalViewFillMode:TRTCVideoFillMode_Fit];
     } else {
@@ -126,7 +127,7 @@ RCT_EXPORT_METHOD(startRemote:(NSString *) userId
                   fitMode:(NSNumber *) fitMode
                   reactTag:(NSNumber *) reactTag){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-    UIView *view = viewRegistry[reactTag];
+    TRTCVideoView *view = viewRegistry[reactTag];
     if(fitMode == 0){
       [trtcCloud setRemoteViewFillMode:userId mode:TRTCVideoFillMode_Fit];
     } else {

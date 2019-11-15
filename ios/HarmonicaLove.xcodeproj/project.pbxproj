@@ -19,6 +19,8 @@
 		3A1D106C23769EB80084843F /* TRTCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D106B23769EB80084843F /* TRTCManager.m */; };
 		3A1D108F2376CB810084843F /* TRTCVideoViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D108E2376CB810084843F /* TRTCVideoViewManager.m */; };
 		3A1D10922376CDAD0084843F /* RCTTRTCVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D10912376CDAD0084843F /* RCTTRTCVideoView.m */; };
+		3AAFB4F3237E3C8B006EAB88 /* TRTCVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAFB4F2237E3C8B006EAB88 /* TRTCVideoView.m */; };
+		3AAFB4F6237E41B6006EAB88 /* UIView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAFB4F5237E41B6006EAB88 /* UIView+Additions.m */; };
 		3DB41F4E94166E986BB4B013 /* libPods-HarmonicaLove.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82A7EC483C7DDFA139B05204 /* libPods-HarmonicaLove.a */; };
 		662FBB54F1C00322A949510B /* libPods-HarmonicaLove-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DCCC8101C0D38EAD87F9BA /* libPods-HarmonicaLove-tvOS.a */; };
 		A309B78DACC94FF7362FA837 /* libPods-HarmonicaLove-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0B1653338B8B96ECF1B450D /* libPods-HarmonicaLove-tvOSTests.a */; };
@@ -65,6 +67,10 @@
 		3A1D108E2376CB810084843F /* TRTCVideoViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TRTCVideoViewManager.m; sourceTree = "<group>"; };
 		3A1D10902376CDAD0084843F /* RCTTRTCVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTTRTCVideoView.h; sourceTree = "<group>"; };
 		3A1D10912376CDAD0084843F /* RCTTRTCVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTTRTCVideoView.m; sourceTree = "<group>"; };
+		3AAFB4F1237E3C8B006EAB88 /* TRTCVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRTCVideoView.h; sourceTree = "<group>"; };
+		3AAFB4F2237E3C8B006EAB88 /* TRTCVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TRTCVideoView.m; sourceTree = "<group>"; };
+		3AAFB4F4237E41B6006EAB88 /* UIView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Additions.h"; sourceTree = "<group>"; };
+		3AAFB4F5237E41B6006EAB88 /* UIView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Additions.m"; sourceTree = "<group>"; };
 		48F96C322CA2D51708B721ED /* Pods-HarmonicaLove-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarmonicaLove-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-HarmonicaLove-tvOSTests/Pods-HarmonicaLove-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		54A5B1C9BE7EDC9E5EAF9955 /* Pods-HarmonicaLoveTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarmonicaLoveTests.debug.xcconfig"; path = "Target Support Files/Pods-HarmonicaLoveTests/Pods-HarmonicaLoveTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6D4B65DDF69DA89A13181679 /* Pods-HarmonicaLoveTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HarmonicaLoveTests.release.xcconfig"; path = "Target Support Files/Pods-HarmonicaLoveTests/Pods-HarmonicaLoveTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -162,6 +168,10 @@
 		3A1D105C23769B4F0084843F /* TRTC */ = {
 			isa = PBXGroup;
 			children = (
+				3AAFB4F4237E41B6006EAB88 /* UIView+Additions.h */,
+				3AAFB4F5237E41B6006EAB88 /* UIView+Additions.m */,
+				3AAFB4F1237E3C8B006EAB88 /* TRTCVideoView.h */,
+				3AAFB4F2237E3C8B006EAB88 /* TRTCVideoView.m */,
 				3A1D106A23769EB80084843F /* TRTCManager.h */,
 				3A1D106B23769EB80084843F /* TRTCManager.m */,
 				3A1D108D2376CB810084843F /* TRTCVideoViewManager.h */,
@@ -561,6 +571,8 @@
 				3A1D106C23769EB80084843F /* TRTCManager.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				3A1D108F2376CB810084843F /* TRTCVideoViewManager.m in Sources */,
+				3AAFB4F6237E41B6006EAB88 /* UIView+Additions.m in Sources */,
+				3AAFB4F3237E3C8B006EAB88 /* TRTCVideoView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,6 +678,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = MYDG9Y3TK3;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = HarmonicaLove/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -689,6 +705,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MYDG9Y3TK3;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = HarmonicaLove/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (

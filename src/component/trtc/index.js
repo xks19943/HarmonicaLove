@@ -4,11 +4,13 @@ import {
     NativeModules,
     ViewPropTypes,
     Platform,
-    findNodeHandle
+    findNodeHandle,
+    requireNativeComponent
 } from 'react-native';
 
 console.log(NativeModules, 'xxx');
-const NativeTRTC = Platform.OS === 'ios' ?NativeModules.TRTCManager : null;
+const NativeTRTC = Platform.OS === 'ios' ?NativeModules.TRTCManager : NativeModules.TRTCModule;
+const TRTCVideoView = requireNativeComponent('RNTTRTCVideoView');
 
 
 class TRTC extends Component<Props>{
@@ -22,6 +24,8 @@ class TRTC extends Component<Props>{
     firstLayoutPromise = new Promise(resolve => {
         this.resolveFirstLayout = resolve;
     });
+
+
 
     /**
      * 主播或者观众加入聊天室
@@ -49,14 +53,9 @@ class TRTC extends Component<Props>{
      * @param frontCamera 相机是否前置
      * @param fitMode 视频显示模式为 Fill 或 Fit 模式  0位fit模式 1位fill模式
      */
-    startLocal(frontCamera, fitMode){
-      this.firstLayoutPromise
-        .then(() => {
-          const node = findNodeHandle(this.root);
-          NativeTRTC.startLocal(frontCamera, fitMode, node);
-        }).then((e)=>{
-            console.log(e, '---')
-        })
+    startLocal(frontCamera: boolean, fitMode: number)  : Promise<any> {
+        const node = findNodeHandle(this.root);
+        return NativeTRTC.startLocal(frontCamera, fitMode, node);
     }
 
 
@@ -80,14 +79,9 @@ class TRTC extends Component<Props>{
      * @param userId
      * @param fitMode
      */
-    startRemote(userId: string, fitMode: number){
-      this.firstLayoutPromise
-        .then(() => {
-          const node = findNodeHandle(this.root);
-          NativeTRTC.startRemote(userId, fitMode, node)
-        }).then((e)=>{
-        console.log(e, '---')
-      });
+    startRemote(userId: string, fitMode: number) : Promise<any> {
+        const node = findNodeHandle(this.root);
+        return NativeTRTC.startRemote(userId, fitMode, node);
     }
 
     /**
@@ -104,7 +98,37 @@ class TRTC extends Component<Props>{
 
 
     componentDidMount(){
-        this.startLocal(true,0);
+        let role = this.props.role;
+        let sdkAppId = 1400192037;
+        let userId = "11011";
+        let userSig = "f068173020dd1ca204718567f841455c644879bbd78c776da58a77dac2a054d2";
+        let roomId = 110;
+        console.log(role);
+        if(role === 0){
+            this.enterRoom(sdkAppId,userId,userSig,roomId,role).then((isSuccess)=>{
+                console.log(isSuccess,'ccc');
+                this.startLocal(true, 0).then((res)=>{
+                    console.log(res, '---');
+                }).catch((e)=>{
+                    console.log(e, 'xxx');
+                });
+            }).catch((e)=>{
+                console.log(e,'ooo');
+            });
+        } else {
+            this.enterRoom(sdkAppId,"123456",userSig,roomId,role).then((ooo)=>{
+                // this.userId = userId;
+                // console.log(userId,'ggg');
+                this.startRemote(userId, 0).then((res)=>{
+                    console.log(res, '666');
+                }).catch((e)=>{
+                    console.log(e, '777');
+                });
+            }).catch((e)=>{
+                console.log(e,'888');
+            });
+        }
+
     }
 
     componentWillUnmount(){
@@ -114,7 +138,7 @@ class TRTC extends Component<Props>{
 
     render(){
         return(
-            <View
+            <TRTCVideoView
                 ref={this.onRef}
                 style={this.props.style}/>
         )

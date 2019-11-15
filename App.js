@@ -9,14 +9,18 @@
 import React from 'react';
 import {
     StyleSheet,
-    View
+    View,
+    Text
 } from 'react-native';
 import TRTC from './src/component/trtc';
 
 class App extends React.Component{
   render(){
     return(
-        <TRTC style={styles.container}/>
+        <View style={styles.root}>
+            <TRTC style={styles.anchor} role={0}/>
+            <TRTC style={styles.audience} role={1}/>
+        </View>
     )
   }
 }
@@ -24,7 +28,18 @@ export default App;
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
+    root: {
+        flex: 1
+    },
+    anchor: {
+        flex: 1
+    },
+    audience: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 120,
+        height: 240,
+        zIndex: 10,
+    }
 });
