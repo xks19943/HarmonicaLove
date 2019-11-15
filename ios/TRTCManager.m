@@ -60,7 +60,9 @@ RCT_EXPORT_METHOD(enterRoom:(UInt32) sdkAppId
                   userId:(NSString *) userId
                   userSig:(NSString *) userSig
                   roomId:(UInt32) roomId
-                  role:(NSInteger *) role){
+                  role:(NSInteger *) role
+                  rosolver: (RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject){
   TRTCParams *params = [[TRTCParams alloc] init];
   params.sdkAppId    = sdkAppId;
   params.userId      = userId;
@@ -68,8 +70,12 @@ RCT_EXPORT_METHOD(enterRoom:(UInt32) sdkAppId
   params.roomId      = roomId; //输入您想进入的房间
   if(role == 0){
      params.role     = TRTCRoleAnchor; //当前角色为主播
+    _mLocalResover = resolve;
+    _mLocalRejecter = reject;
   } else {
     params.role      = TRTCRoleAudience;
+    _mRemoteResover = resolve;
+    _mRemoteRejecter = reject;
   }
   [trtcCloud enterRoom:params appScene:TRTCAppSceneLIVE];
 }
@@ -90,17 +96,28 @@ RCT_EXPORT_METHOD(exitRoom){
 /// @param reactTag
 RCT_EXPORT_METHOD(startLocal:(BOOL) frontCamera
                   fitMode:(NSNumber *) fitMode
-                  reactTag:(NSNumber *) reactTag){
+                  reactTag:(NSNumber *) reactTag
+                  rosolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject){
+  
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-    TRTCVideoView *view = viewRegistry[reactTag];
-    if(fitMode == 0){
-      [trtcCloud setLocalViewFillMode:TRTCVideoFillMode_Fit];
-    } else {
-      [trtcCloud setLocalViewFillMode:TRTCVideoFillMode_Fill];
+    @try {
+      TRTCVideoView *view = viewRegistry[reactTag];
+      if(fitMode == 0){
+        [trtcCloud setLocalViewFillMode:TRTCVideoFillMode_Fit];
+      } else {
+        [trtcCloud setLocalViewFillMode:TRTCVideoFillMode_Fill];
+      }
+      [trtcCloud startLocalPreview:frontCamera view:view];
+      [trtcCloud startLocalAudio];
+      resolve(@"success");
+    } @catch (NSException *exception) {
+      reject(@"startLocal",@"startLocal fail", nil);
+    } @finally {
+     
     }
-    [trtcCloud startLocalPreview:frontCamera view:view];
-    [trtcCloud startLocalAudio];
   }];
+  
 }
 
 
@@ -125,15 +142,24 @@ RCT_EXPORT_METHOD(muteLocal){
 /// @param reactTag
 RCT_EXPORT_METHOD(startRemote:(NSString *) userId
                   fitMode:(NSNumber *) fitMode
-                  reactTag:(NSNumber *) reactTag){
+                  reactTag:(NSNumber *) reactTag
+                  rosolver:(RCTPromiseResolveBlock) resolve
+                  rejecter:(RCTPromiseRejectBlock) reject){
   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *,UIView *> *viewRegistry) {
-    TRTCVideoView *view = viewRegistry[reactTag];
-    if(fitMode == 0){
-      [trtcCloud setRemoteViewFillMode:userId mode:TRTCVideoFillMode_Fit];
-    } else {
-      [trtcCloud setRemoteViewFillMode:userId mode:TRTCVideoFillMode_Fill];
+    @try {
+      TRTCVideoView *view = viewRegistry[reactTag];
+      if(fitMode == 0){
+        [trtcCloud setRemoteViewFillMode:userId mode:TRTCVideoFillMode_Fit];
+      } else {
+        [trtcCloud setRemoteViewFillMode:userId mode:TRTCVideoFillMode_Fill];
+      }
+      [trtcCloud startRemoteView:userId view:view];
+      resolve(@"success");
+    } @catch (NSException *exception) {
+      reject(@"startRemote",@"startRemote fail", nil);
+    } @finally {
+      
     }
-    [trtcCloud startRemoteView:userId view:view];
   }];
 }
 
@@ -152,13 +178,21 @@ RCT_EXPORT_METHOD(stopRemote:(NSString *) userId){
 
 
 - (void)onEnterRoom:(NSInteger)result {
-  
+  if(_mLocalResover != nil){
+    _mLocalResover(@"success");
+    _mLocalResover = nil;
+    _mLocalRejecter = nil;
+  }
 }
 
 
 //观众加入房间观看成功
 - (void)onUserVideoAvailable:(NSString *)userId available:(BOOL)available {
-  
+  if(_mRemoteResover != nil){
+    _mRemoteResover(@"success");
+    _mRemoteResover = nil;
+    _mRemoteRejecter = nil;
+  }
 }
 
 @end
