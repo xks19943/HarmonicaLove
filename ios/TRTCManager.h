@@ -11,12 +11,12 @@
 
 @interface TRTCManager : NSObject <RCTBridgeModule,TRTCCloudDelegate>
 
-@property(nonatomic, strong) RCTPromiseResolveBlock mLocalResover;
-@property(nonatomic, strong) RCTPromiseRejectBlock mLocalRejecter;
+@property(nonatomic, copy) RCTPromiseResolveBlock mLocalResover;
+@property(nonatomic, copy) RCTPromiseRejectBlock mLocalRejecter;
 
 
-@property(nonatomic, strong) RCTPromiseResolveBlock mRemoteResover;
-@property(nonatomic, strong) RCTPromiseRejectBlock mRemoteRejecter;
+@property(nonatomic, copy) RCTPromiseResolveBlock mRemoteResover;
+@property(nonatomic, copy) RCTPromiseRejectBlock mRemoteRejecter;
 
 @end
 
