@@ -36,8 +36,13 @@ class TRTC extends Component<Props>{
      * @param role  0为主播 1为观众
      * @returns {Promise<*>}
      */
-    enterRoom(sdkAppId: number, userId: string, userSig: string, roomId: number, role: number) : Promise<any> {
-        return NativeTRTC.enterRoom(sdkAppId, userId, userSig, roomId, role);
+    async enterRoom(sdkAppId: number, userId: string, userSig: string, roomId: number, role: number) : Promise<any> {
+        try {
+          return NativeTRTC.enterRoom(sdkAppId, userId, userSig, roomId, role)
+        } catch (e) {
+            console.log(e);
+            return e;
+        }
     }
 
     /**
@@ -53,9 +58,9 @@ class TRTC extends Component<Props>{
      * @param frontCamera 相机是否前置
      * @param fitMode 视频显示模式为 Fill 或 Fit 模式  0位fit模式 1位fill模式
      */
-    startLocal(frontCamera: boolean, fitMode: number)  : Promise<any> {
+    async startLocal(frontCamera: boolean, fitMode: number)  : Promise<any> {
         const node = findNodeHandle(this.root);
-        return NativeTRTC.startLocal(frontCamera, fitMode, node);
+        return await NativeTRTC.startLocal(frontCamera, fitMode, node);
     }
 
 
@@ -79,9 +84,13 @@ class TRTC extends Component<Props>{
      * @param userId
      * @param fitMode
      */
-    startRemote(userId: string, fitMode: number) : Promise<any> {
-        const node = findNodeHandle(this.root);
-        return NativeTRTC.startRemote(userId, fitMode, node);
+    async startRemote(userId: string, fitMode: number) : Promise<any> {
+      try {
+            const node = findNodeHandle(this.root);
+            return await NativeTRTC.startRemote(userId, fitMode, node);
+      } catch (e){
+          return e;
+      }
     }
 
     /**
@@ -116,17 +125,19 @@ class TRTC extends Component<Props>{
                 console.log(e,'ooo');
             });
         } else {
-            this.enterRoom(sdkAppId,"123456",userSig,roomId,role).then((ooo)=>{
+            setTimeout(()=>{
+              this.enterRoom(sdkAppId,"123456",userSig,roomId,role).then((ooo)=>{
                 // this.userId = userId;
                 // console.log(userId,'ggg');
                 this.startRemote(userId, 0).then((res)=>{
-                    console.log(res, '666');
+                  console.log(res, '666');
                 }).catch((e)=>{
-                    console.log(e, '777');
+                  console.log(e, '777');
                 });
-            }).catch((e)=>{
+              }).catch((e)=>{
                 console.log(e,'888');
-            });
+              });
+            },5000);
         }
 
     }

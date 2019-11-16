@@ -19,7 +19,7 @@ class App extends React.Component{
     return(
         <View style={styles.root}>
             <TRTC style={styles.anchor} role={0}/>
-            <TRTC style={styles.audience} role={1}/>
+            {/*<TRTC style={styles.audience} role={1}/>*/}
         </View>
     )
   }
