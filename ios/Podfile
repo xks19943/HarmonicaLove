@@ -35,6 +35,8 @@ target 'HarmonicaLove' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   pod 'TXLiteAVSDK_TRTC'
+  pod 'TXIMSDK_iOS'
+  pod 'TXIMSDK_TUIKit_iOS'
 
   target 'HarmonicaLoveTests' do
     inherit! :search_paths
